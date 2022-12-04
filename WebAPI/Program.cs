@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using Persistence;
 using Serilog;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,11 +28,13 @@ Log.Logger = new LoggerConfiguration()
                     .ReadFrom.Configuration(configuration)
                     .CreateLogger();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+options.ModelValidatorProviders.Clear())
+    .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("V1", new OpenApiInfo { Title = "Bookish API", Version = "V1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Bookish API", Version = "V1" });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = @"JWT Authorization header using the Bearer scheme. r\n\r\n 
@@ -61,6 +64,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Host.UseSerilog();
 builder.Services.AddMemoryCache();
 
 builder.Services.AddAuthentication(option =>
@@ -119,21 +123,28 @@ builder.Services.AddCors(o =>
 
 var app = builder.Build();
 
+app.UseForwardedHeaders();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseMiniProfiler();
+    app.UseDeveloperExceptionPage();
 }
 
+app.UseDeveloperExceptionPage();
+
+app.Urls.Add("http://*:5000");
 
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c => 
+c.SwaggerEndpoint("/swagger/v1/swagger.json", "Bookish API")
+);
 
 app.UseStaticFiles();
 app.UseSerilogRequestLogging();
 
 app.UseCors("AllowAll");
 
-app.Urls.Add("http://*:5000");
 
 app.UseHttpsRedirection();
 
@@ -141,5 +152,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+Console.WriteLine("Finished starting");
 
 app.Run();
