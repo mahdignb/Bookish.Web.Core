@@ -1,5 +1,5 @@
 using Common.Mapping;
-using Domain.Entities;
+using Domain.Entities.Account;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
