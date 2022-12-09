@@ -19,9 +19,8 @@ namespace Persistence
             //and they take extra size for no reason because we use guid that
             //has length of 36 we change that to 36
 
-            builder.Entity<IdentityUser>(entity => entity.Property(m => m.Id).HasMaxLength(36));
-            builder.Entity<IdentityUser>(entity => entity.Property(m => m.NormalizedEmail).HasMaxLength(36));
-            builder.Entity<IdentityUser>(entity => entity.Property(m => m.NormalizedUserName).HasMaxLength(36));
+            //Should pass account not Identity user itself
+            builder.Entity<Account>(entity => entity.Property(m => m.Id).HasMaxLength(36));
 
             builder.Entity<IdentityRole>(entity => entity.Property(m => m.Id).HasMaxLength(36));
             builder.Entity<IdentityRole>(entity => entity.Property(m => m.NormalizedName).HasMaxLength(36));
