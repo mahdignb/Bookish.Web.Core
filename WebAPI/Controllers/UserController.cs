@@ -1,4 +1,5 @@
 ﻿using Domain.Entities.Account;
+using Domain.Utility;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -59,6 +60,29 @@ namespace WebAPI.Controllers
             //                                              _userManager, _emailService);
             //return await enableTwoStep.EnableTwoStep(model);
             return "";
+        }
+        [HttpPost]
+        [Route("Register")]
+        public async Task<ActionResult<string>> Register([FromBody] RegisterModel model)
+        {
+            var account = new Account
+            {
+                Id = Guid.NewGuid().ToString(),
+                Email = model.UserName,
+                UserName = model.UserName,
+                UserType = UserType.Admin.ToString(),
+            };
+            var result = await _userManager.CreateAsync(account, model.Password);
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+            return BadRequest(result);
+        }
+        public class RegisterModel
+        {
+            public string UserName { get; set; }
+            public string Password { get; set; }
         }
     }
 }
