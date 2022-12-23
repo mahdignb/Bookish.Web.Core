@@ -1,5 +1,6 @@
 using Common.Mapping;
 using Domain.Entities.Account;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -9,16 +10,21 @@ using Persistence;
 using Serilog;
 using System.Text;
 using System.Text.Json.Serialization;
+using WebAPI.Helper;
+using WebAPI.Models;
+using WebAPI.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
+Console.WriteLine(builder.Environment.EnvironmentName);
 var configuration = new ConfigurationBuilder()
   .AddJsonFile("appsettings.json")
   .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json")
   .AddEnvironmentVariables()
   .Build();
 
-var maindbConnectionString = builder.Configuration.GetConnectionString("MainDB");
+var maindbConnectionString = configuration.GetConnectionString("MainDB");
+Console.WriteLine(maindbConnectionString);
 builder.Services.AddDbContext<BookishDbContext>(options =>
 {
     options.UseMySql(maindbConnectionString, ServerVersion.AutoDetect(maindbConnectionString));
@@ -76,14 +82,14 @@ builder.Services.AddAuthentication(option =>
 {
     options.SaveToken = true;
     options.RequireHttpsMetadata = false;
-    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+    options.TokenValidationParameters = new TokenValidationParameters()
     {
         ValidateIssuer = true,
         ValidateAudience = true,
-        ValidAudience = builder.Configuration["jwt_valid_audience"],
-        ValidIssuer = builder.Configuration["jwt_valid_issuer"],
+        ValidAudience = configuration["jwt_valid_audience"],
+        ValidIssuer = configuration["jwt_valid_issuer"],
         ClockSkew = TimeSpan.Zero,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["jwt_secret"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["jwt_secret"]))
     };
 });
 
@@ -120,6 +126,11 @@ builder.Services.AddCors(o =>
      .AllowAnyHeader());
 });
 
+builder.Services.AddScoped<AccessTokenGenerator>();
+builder.Services.AddScoped<RefreshTokenGenerator>();
+builder.Services.AddScoped<RefreshTokenValidator>();
+builder.Services.AddScoped<IValidator<RefreshRequest>, RefreshRequestValidator>();
+builder.Services.AddScoped<IValidator<TokenModel>, AccessTokenModelValidator>();
 
 var app = builder.Build();
 
@@ -130,8 +141,6 @@ if (app.Environment.IsDevelopment())
     app.UseMiniProfiler();
     app.UseDeveloperExceptionPage();
 }
-
-app.UseDeveloperExceptionPage();
 
 app.Urls.Add("http://*:5000");
 
@@ -144,9 +153,6 @@ app.UseStaticFiles();
 app.UseSerilogRequestLogging();
 
 app.UseCors("AllowAll");
-
-
-app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
