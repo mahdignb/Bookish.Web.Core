@@ -1,6 +1,5 @@
 ﻿using Domain.Entities.Account;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Persistence;
 
 namespace WebAPI.Helper
