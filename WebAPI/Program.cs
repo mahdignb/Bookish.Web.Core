@@ -20,6 +20,7 @@ Console.WriteLine(builder.Environment.EnvironmentName);
 var configuration = new ConfigurationBuilder()
   .AddJsonFile("appsettings.json")
   .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json")
+  .AddUserSecrets<Program>()
   .AddEnvironmentVariables()
   .Build();
 
@@ -145,7 +146,7 @@ if (app.Environment.IsDevelopment())
 app.Urls.Add("http://*:5000");
 
 app.UseSwagger();
-app.UseSwaggerUI(c => 
+app.UseSwaggerUI(c =>
 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Bookish API")
 );
 
