@@ -1,17 +1,18 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Core.Book.Queries.GetBooks;
+using Domain.Entities.Bookish;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BookController : ControllerBase
+    public class BookController : ApiControllerBase
     {
-        [HttpGet]
-        [Route("test")]
-        public string Test()
+        [HttpPost]
+        [Route("GetBooks")]
+        public async Task<List<Book>> GetBooks([FromBody] GetBooksQuery query)
         {
-            return "Hello world";
+            return await Mediator.Send(query);
         }
     }
 }
