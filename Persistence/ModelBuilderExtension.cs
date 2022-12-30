@@ -37,6 +37,41 @@ namespace Persistence
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 NormalizedName = "SUPERADMIN"
             });
+            //Publishers
+            builder.Entity<Publisher>().HasData(new Publisher
+            {
+                PublisherId = "1",
+                Name = "Manning",
+                Address = "Shelter Island",
+                City = "New York",
+                Country = "United States"
+            });
+            //Author
+            builder.Entity<Author>().HasData(new Author
+            {
+                AuthorId = "1",
+                FirstName = "Robert",
+                MiddleName = "C",
+                LastName = "Martin",
+            });
+            //Books
+            builder.Entity<Book>().HasData(new Book
+            {
+                BookId = "1",
+                Title = "Clean code",
+                Language = "English",
+                Edition = "1",
+                PublisherId = "1",
+                ISBN = "1234",
+                Description = "Uncle bobs clean code",
+                PublishTime = DateTime.UtcNow
+            });
+            //BooksAuthor
+            builder.Entity<BookAuthor>().HasData(new BookAuthor
+            {
+                AuthorId = "1",
+                BookId = "1"
+            });
         }
     }
 }
