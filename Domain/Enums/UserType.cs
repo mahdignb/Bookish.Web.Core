@@ -4,6 +4,7 @@
     {
         User,
         Admin,
+        SuperAdmin,
         Undefined
     }
 }
