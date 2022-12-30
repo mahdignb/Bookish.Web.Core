@@ -1,6 +1,8 @@
 using Common.Mapping;
+using Core.Common.Interfaces;
 using Domain.Entities.Account;
 using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Persistence;
 using Serilog;
+using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 using WebAPI.Helper;
@@ -24,13 +27,6 @@ var configuration = new ConfigurationBuilder()
   .AddUserSecrets<Program>()
   .AddEnvironmentVariables()
   .Build();
-
-var maindbConnectionString = configuration.GetConnectionString("MainDB");
-Console.WriteLine(maindbConnectionString);
-builder.Services.AddDbContext<BookishDbContext>(options =>
-{
-    options.UseMySql(maindbConnectionString, ServerVersion.AutoDetect(maindbConnectionString));
-});
 
 Log.Logger = new LoggerConfiguration()
                     .ReadFrom.Configuration(configuration)
@@ -72,6 +68,13 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+var maindbConnectionString = configuration.GetConnectionString("MainDB");
+Console.WriteLine(maindbConnectionString);
+builder.Services.AddDbContext<BookishDbContext>(options =>
+{
+    options.UseMySql(maindbConnectionString, ServerVersion.AutoDetect(maindbConnectionString));
+});
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Host.UseSerilog();
 builder.Services.AddMemoryCache();
 
@@ -118,8 +121,9 @@ builder.Services.AddIdentity<Account, IdentityRole>(
 builder.Services.Configure<DataProtectionTokenProviderOptions>(option =>
  option.TokenLifespan = TimeSpan.FromHours(1));
 
+builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddAutoMapper(typeof(MappingProfile));
-
+builder.Services.AddScoped<IBookishDbContext>(provider => provider.GetRequiredService<BookishDbContext>());
 builder.Services.AddCors(o =>
 {
     o.AddPolicy("AllowAll", builder =>
@@ -146,12 +150,14 @@ var userSeed = new UserSeed();
 await userSeed.Seed();
 if (!bookishDb.Users.Any())
 {
+    Console.WriteLine("Seeding database");
     await userManager.CreateAsync(userSeed.MasterChiefAccount, userSeed.MasterChiefPassword);
     await userManager.AddToRoleAsync(userSeed.MasterChiefAccount, "SuperAdmin");
     await userManager.CreateAsync(userSeed.NathanDrakesAccount, userSeed.NathanDrakesPassword);
     await userManager.AddToRoleAsync(userSeed.NathanDrakesAccount, "Admin");
     await userManager.CreateAsync(userSeed.TomCruiseAccount, userSeed.TomCruisePassword);
     await userManager.AddToRoleAsync(userSeed.TomCruiseAccount, "User");
+    Console.WriteLine("Finished seeding database");
 }
 app.UseForwardedHeaders();
 
