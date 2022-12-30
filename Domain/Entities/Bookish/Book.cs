@@ -15,5 +15,7 @@ namespace Domain.Entities.Bookish
         public string PublishTime { get; set; }
         public string Language { get; set; }
         public string Description { get; set; }
+        public string PublisherId { get; set; }
+        public Publisher Publisher { get; set; }
     }
 }
