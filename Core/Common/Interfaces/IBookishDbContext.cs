@@ -10,7 +10,7 @@ namespace Core.Common.Interfaces
 {
     public interface IBookishDbContext
     {
-        public DbSet<Book> Books { get; set; }
+        public DbSet<Domain.Entities.Bookish.Book> Books { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<BookAuthor> BookAuthors { get; set; }
     }

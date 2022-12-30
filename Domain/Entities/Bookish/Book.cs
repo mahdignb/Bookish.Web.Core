@@ -12,7 +12,7 @@ namespace Domain.Entities.Bookish
         public string Title { get; set; }
         public string ISBN { get; set; }
         public string Edition { get; set; }
-        public string PublishTime { get; set; }
+        public DateTime PublishTime { get; set; }
         public string Language { get; set; }
         public string Description { get; set; }
         public string PublisherId { get; set; }
