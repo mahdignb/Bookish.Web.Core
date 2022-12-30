@@ -12,6 +12,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using WebAPI.Helper;
 using WebAPI.Models;
+using WebAPI.SeedData;
 using WebAPI.Service;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -134,6 +135,21 @@ builder.Services.AddScoped<IValidator<RefreshRequest>, RefreshRequestValidator>(
 builder.Services.AddScoped<IValidator<TokenModel>, AccessTokenModelValidator>();
 
 var app = builder.Build();
+
+var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+var bookishDb = services.GetRequiredService<BookishDbContext>();
+var userManager = services.GetRequiredService<UserManager<Account>>();
+
+await bookishDb.Database.EnsureCreatedAsync();
+var userSeed = new UserSeed();
+await userSeed.Seed();
+await userManager.CreateAsync(userSeed.MasterChiefAccount,userSeed.MasterChiefPassword);
+await userManager.AddToRoleAsync(userSeed.MasterChiefAccount,"SuperAdmin");
+await userManager.CreateAsync(userSeed.NathanDrakesAccount, userSeed.NathanDrakesPassword);
+await userManager.AddToRoleAsync(userSeed.NathanDrakesAccount, "Admin");
+await userManager.CreateAsync(userSeed.TomCruiseAccount, userSeed.TomCruisePassword);
+await userManager.AddToRoleAsync(userSeed.TomCruiseAccount, "User");
 
 app.UseForwardedHeaders();
 
