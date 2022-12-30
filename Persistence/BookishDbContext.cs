@@ -1,21 +1,28 @@
-﻿using Domain.Entities.Account;
+﻿using Core.Common.Interfaces;
+using Domain.Entities.Account;
+using Domain.Entities.Bookish;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence
 {
-    public class BookishDbContext : IdentityDbContext<Account>
+    public class BookishDbContext : IdentityDbContext<Account>,IBookishDbContext
     {
         public BookishDbContext(DbContextOptions<BookishDbContext> option) : base(option)
         {
 
         }
+
+        public DbSet<Book> Books { get; set; }
+        public DbSet<Author> Authors { get; set; }
+        public DbSet<BookAuthor> BookAuthors { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
-            //This lines are because default migrations will have 767 length
+            builder.Seed();
+            //This lines are because default migrations will have 256 length
             //and they take extra size for no reason because we use guid that
             //has length of 36 we change that to 36
 
@@ -41,6 +48,7 @@ namespace Persistence
             builder.Entity<IdentityRoleClaim<string>>(entity => entity.Property(m => m.Id).HasMaxLength(36));
             builder.Entity<IdentityRoleClaim<string>>(entity => entity.Property(m => m.RoleId).HasMaxLength(36));
 
+            builder.Entity<BookAuthor>().HasKey(table => new { table.BookId, table.AuthorId });
         }
     }
 }
