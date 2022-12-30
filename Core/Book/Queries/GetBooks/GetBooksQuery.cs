@@ -1,12 +1,6 @@
 ﻿using Core.Common.Interfaces;
-using Domain.Entities.Bookish;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.Book.Queries.GetBooks
 {
