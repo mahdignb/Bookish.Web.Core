@@ -23,7 +23,7 @@ namespace WebAPI.SeedData
                 UserType = UserType.SuperAdmin.ToString(),
                 TwoFactorEnabled = false
             };
-            MasterChiefPassword = "test";
+            MasterChiefPassword = "test@123";
             NathanDrakesAccount = new Account
             {
                 Id = Guid.NewGuid().ToString(),
@@ -34,7 +34,7 @@ namespace WebAPI.SeedData
                 UserType = UserType.Admin.ToString(),
                 TwoFactorEnabled = false
             };
-            NathanDrakesPassword = "test";
+            NathanDrakesPassword = "test@123";
             TomCruiseAccount = new Account
             {
                 Id = Guid.NewGuid().ToString(),
@@ -42,10 +42,10 @@ namespace WebAPI.SeedData
                 Email = "Tom@gmail.com",
                 IsActive = true,
                 UserName = "Tom@gmail.com",
-                UserType = UserType.Admin.ToString(),
+                UserType = UserType.User.ToString(),
                 TwoFactorEnabled = false
             };
-            TomCruisePassword = "test";
+            TomCruisePassword = "test@123";
             return Task.CompletedTask;
         }
     }

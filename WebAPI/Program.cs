@@ -144,13 +144,15 @@ var userManager = services.GetRequiredService<UserManager<Account>>();
 await bookishDb.Database.EnsureCreatedAsync();
 var userSeed = new UserSeed();
 await userSeed.Seed();
-await userManager.CreateAsync(userSeed.MasterChiefAccount,userSeed.MasterChiefPassword);
-await userManager.AddToRoleAsync(userSeed.MasterChiefAccount,"SuperAdmin");
-await userManager.CreateAsync(userSeed.NathanDrakesAccount, userSeed.NathanDrakesPassword);
-await userManager.AddToRoleAsync(userSeed.NathanDrakesAccount, "Admin");
-await userManager.CreateAsync(userSeed.TomCruiseAccount, userSeed.TomCruisePassword);
-await userManager.AddToRoleAsync(userSeed.TomCruiseAccount, "User");
-
+if (!bookishDb.Users.Any())
+{
+    await userManager.CreateAsync(userSeed.MasterChiefAccount, userSeed.MasterChiefPassword);
+    await userManager.AddToRoleAsync(userSeed.MasterChiefAccount, "SuperAdmin");
+    await userManager.CreateAsync(userSeed.NathanDrakesAccount, userSeed.NathanDrakesPassword);
+    await userManager.AddToRoleAsync(userSeed.NathanDrakesAccount, "Admin");
+    await userManager.CreateAsync(userSeed.TomCruiseAccount, userSeed.TomCruisePassword);
+    await userManager.AddToRoleAsync(userSeed.TomCruiseAccount, "User");
+}
 app.UseForwardedHeaders();
 
 if (app.Environment.IsDevelopment())
