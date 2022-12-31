@@ -1,11 +1,13 @@
 using Common.Mapping;
 using Core.Common.Interfaces;
+using Core.Services;
 using Domain.Entities.Account;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Persistence;
@@ -124,6 +126,7 @@ builder.Services.Configure<DataProtectionTokenProviderOptions>(option =>
 builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<IBookishDbContext>(provider => provider.GetRequiredService<BookishDbContext>());
+builder.Services.AddScoped<IAccessService, AccessService>();
 builder.Services.AddCors(o =>
 {
     o.AddPolicy("AllowAll", builder =>
