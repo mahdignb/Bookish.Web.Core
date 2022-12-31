@@ -15,5 +15,7 @@ namespace Core.Common.Interfaces
         public DbSet<Author> Authors { get; set; }
         public DbSet<BookAuthor> BookAuthors { get; set; }
         public DbSet<Account> Users { get; set; }
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+
     }
 }
