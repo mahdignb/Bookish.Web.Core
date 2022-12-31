@@ -1,4 +1,5 @@
-﻿using Domain.Entities.Account;
+﻿using Core.Common.Interfaces;
+using Domain.Entities.Account;
 using Domain.Utility;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -24,8 +25,9 @@ namespace WebAPI.Controllers
         private readonly IValidator<RefreshRequest> _refreshRequestValidator;
         private readonly IValidator<TokenModel> _accessTokenValidator;
         //private readonly IAccessService _accessService;
+        private readonly IAccessService _accessService;
 
-        public UserController(AccessTokenGenerator accessTokenGenerator, RefreshTokenGenerator refreshTokenGenerator, RefreshTokenValidator refreshTokenValidator, UserManager<Account> userManager, BookishDbContext bookishDb, IValidator<RefreshRequest> refreshRequestValidator, IValidator<TokenModel> accessTokenValidator)
+        public UserController(AccessTokenGenerator accessTokenGenerator, RefreshTokenGenerator refreshTokenGenerator, RefreshTokenValidator refreshTokenValidator, UserManager<Account> userManager, BookishDbContext bookishDb, IValidator<RefreshRequest> refreshRequestValidator, IValidator<TokenModel> accessTokenValidator, IAccessService accessService)
         {
             _accessTokenGenerator = accessTokenGenerator;
             _refreshTokenGenerator = refreshTokenGenerator;
@@ -34,6 +36,7 @@ namespace WebAPI.Controllers
             _bookishDb = bookishDb;
             _refreshRequestValidator = refreshRequestValidator;
             _accessTokenValidator = accessTokenValidator;
+            _accessService = accessService;
         }
 
         [HttpPost]
@@ -78,6 +81,25 @@ namespace WebAPI.Controllers
                 return Ok();
             }
             return BadRequest(result);
+        }
+
+        [Authorize(AuthenticationSchemes = "Bearer")]
+        [HttpGet]
+        [Route("GetCurrentUser")]
+        public async Task<ActionResult<GetCurrentUserDto>> GetCurrentUser()
+        {
+            var user = _accessService.GetCurrentUser();
+            if (user == null)
+            {
+                return BadRequest("User not found");
+            }
+
+            return new GetCurrentUserDto
+            {
+                Email = user.Email,
+                UserName = user.UserName,
+                UserType = user.UserType
+            };
         }
         public class RegisterModel
         {
