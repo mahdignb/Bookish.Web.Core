@@ -83,7 +83,6 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet]
         [Route("GetCurrentUser")]
         public async Task<ActionResult<GetCurrentUserDto>> GetCurrentUser()

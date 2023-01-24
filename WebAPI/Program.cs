@@ -80,6 +80,21 @@ builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Host.UseSerilog();
 builder.Services.AddMemoryCache();
 
+builder.Services.AddIdentity<Account, IdentityRole>(
+             options =>
+             {
+                 options.Stores.MaxLengthForKeys = 128;
+                 options.Password.RequireDigit = false;
+                 options.Password.RequiredLength = 5;
+                 options.Password.RequireNonAlphanumeric = false;
+                 options.Password.RequireUppercase = false;
+                 options.Password.RequireLowercase = false;
+             })
+             .AddEntityFrameworkStores<BookishDbContext>()
+             .AddDefaultTokenProviders();
+builder.Services.Configure<DataProtectionTokenProviderOptions>(option =>
+ option.TokenLifespan = TimeSpan.FromHours(1));
+
 builder.Services.AddAuthentication(option =>
 {
     option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -108,20 +123,6 @@ builder.Services.AddMiniProfiler(options =>
     options.IgnoredPaths.Add("/index.html");
 }).AddEntityFramework();
 
-builder.Services.AddIdentity<Account, IdentityRole>(
-             options =>
-             {
-                 options.Stores.MaxLengthForKeys = 128;
-                 options.Password.RequireDigit = false;
-                 options.Password.RequiredLength = 5;
-                 options.Password.RequireNonAlphanumeric = false;
-                 options.Password.RequireUppercase = false;
-                 options.Password.RequireLowercase = false;
-             })
-             .AddEntityFrameworkStores<BookishDbContext>()
-             .AddDefaultTokenProviders();
-builder.Services.Configure<DataProtectionTokenProviderOptions>(option =>
- option.TokenLifespan = TimeSpan.FromHours(1));
 
 builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddAutoMapper(typeof(MappingProfile));
