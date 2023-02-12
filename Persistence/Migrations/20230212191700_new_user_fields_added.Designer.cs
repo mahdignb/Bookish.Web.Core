@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -10,9 +11,10 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(BookishDbContext))]
-    partial class BookishDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230212191700_new_user_fields_added")]
+    partial class new_user_fields_added
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -142,9 +144,6 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<bool>("IsAvailable")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("Language")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -173,9 +172,8 @@ namespace Persistence.Migrations
                             Description = "Uncle bobs clean code",
                             Edition = "1",
                             ISBN = "1234",
-                            IsAvailable = false,
                             Language = "English",
-                            PublishTime = new DateTime(2023, 2, 12, 20, 54, 26, 945, DateTimeKind.Utc).AddTicks(8323),
+                            PublishTime = new DateTime(2023, 2, 12, 19, 16, 59, 635, DateTimeKind.Utc).AddTicks(4683),
                             PublisherId = "1",
                             Title = "Clean code"
                         });
@@ -290,22 +288,22 @@ namespace Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ffb4eb2f-ef1c-442b-98f7-3f8c53dce266",
-                            ConcurrencyStamp = "617015cd-b8ba-4880-82a7-7c9e5d732bc2",
+                            Id = "afa349d0-0931-412e-b40d-9ab28d213a28",
+                            ConcurrencyStamp = "9c29b810-5268-4567-a4c5-dedfa2eb1284",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "5e2702d4-99a9-4deb-87f3-c1cdc6d82625",
-                            ConcurrencyStamp = "adb950e4-c937-4aca-a1da-51765ff7b4cb",
+                            Id = "132df912-ba91-418f-8fe8-a00e90fd0209",
+                            ConcurrencyStamp = "ca74ac25-0bef-47fa-b4cb-c17040ce99aa",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "1b497b94-aff9-417b-b88b-25d29a434943",
-                            ConcurrencyStamp = "17ffdd03-33bd-4b48-ad21-ef9470151588",
+                            Id = "85a33f9e-eccf-44d7-a32c-388ea3ac7652",
+                            ConcurrencyStamp = "d345b4d1-4d0a-44cd-b37d-439f598f1c71",
                             Name = "SuperAdmin",
                             NormalizedName = "SUPERADMIN"
                         });

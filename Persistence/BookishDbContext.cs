@@ -17,7 +17,7 @@ namespace Persistence
         public DbSet<Author> Authors { get; set; }
         public DbSet<BookAuthor> BookAuthors { get; set; }
         public DbSet<Account> Users { get; set; }
-
+        public DbSet<BorrowBookModel> BorrowBooks { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
