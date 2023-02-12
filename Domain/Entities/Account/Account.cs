@@ -7,5 +7,6 @@ namespace Domain.Entities.Account
     {
         public string UserType { get; set; }
         public bool IsActive { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }

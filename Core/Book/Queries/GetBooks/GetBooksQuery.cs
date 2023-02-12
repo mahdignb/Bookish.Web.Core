@@ -20,6 +20,7 @@ namespace Core.Book.Queries.GetBooks
         public async Task<List<Domain.Entities.Bookish.Book>> Handle(GetBooksQuery request, CancellationToken cancellationToken)
         {
             return await _bookishDb.Books
+                .Where(w=>w.IsAvailable)
                 .ToListAsync(cancellationToken);
         }
     }
