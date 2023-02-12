@@ -1,4 +1,6 @@
-﻿using Core.Book.Commands.AddBooks;
+﻿using Common.Response;
+using Core.Book.Commands.AddBooks;
+using Core.Book.Commands.BorrowBook;
 using Core.Book.Commands.DeleteBook;
 using Core.Book.Commands.EditBook;
 using Core.Book.Queries.GetBooks;
@@ -34,6 +36,12 @@ namespace WebAPI.Controllers
         [HttpDelete]
         [Route("DeleteBook")]
         public async Task<string> DeleteBook([FromBody] DeleteBooksCommand command)
+        {
+            return await Mediator.Send(command);
+        }
+        [HttpPost]
+        [Route("BorrowBook")]
+        public async Task<StandardResponse<string>> BorrowBook([FromBody] BorrowBookCommand command)
         {
             return await Mediator.Send(command);
         }

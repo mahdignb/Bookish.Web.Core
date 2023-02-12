@@ -1,4 +1,6 @@
-﻿using Core.Common.Interfaces;
+﻿using Common.Response;
+using Core.Common.Interfaces;
+using Core.User.Queries.GetUsers;
 using Domain.Entities.Account;
 using Domain.Utility;
 using FluentValidation;
@@ -24,7 +26,6 @@ namespace WebAPI.Controllers
         //private readonly IEmailService _emailService;
         private readonly IValidator<RefreshRequest> _refreshRequestValidator;
         private readonly IValidator<TokenModel> _accessTokenValidator;
-        //private readonly IAccessService _accessService;
         private readonly IAccessService _accessService;
 
         public UserController(AccessTokenGenerator accessTokenGenerator, RefreshTokenGenerator refreshTokenGenerator, RefreshTokenValidator refreshTokenValidator, UserManager<Account> userManager, BookishDbContext bookishDb, IValidator<RefreshRequest> refreshRequestValidator, IValidator<TokenModel> accessTokenValidator, IAccessService accessService)
@@ -99,6 +100,12 @@ namespace WebAPI.Controllers
                 UserName = user.UserName,
                 UserType = user.UserType
             };
+        }
+        [HttpGet]
+        [Route("GetUsers")]
+        public async Task<StandardResponse<List<GetUsersDto>>> GetUsers()
+        {
+            return await Mediator.Send(new GetUsersQueries());
         }
         public class RegisterModel
         {
