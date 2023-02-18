@@ -3,7 +3,9 @@ using Core.Book.Commands.AddBooks;
 using Core.Book.Commands.BorrowBook;
 using Core.Book.Commands.DeleteBook;
 using Core.Book.Commands.EditBook;
+using Core.Book.Commands.ReturnBook;
 using Core.Book.Queries.GetBooks;
+using Core.Book.Queries.GetBorrowedBooks;
 using Domain.Entities.Bookish;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +20,12 @@ namespace WebAPI.Controllers
         [HttpPost]
         [Route("GetBooks")]
         public async Task<List<Book>> GetBooks([FromBody] GetBooksQuery query)
+        {
+            return await Mediator.Send(query);
+        }
+        [HttpPost]
+        [Route("GetBorrowedBooks")]
+        public async Task<StandardResponse<List<BorrowBookModel>>> GetBorrowedBooks([FromBody] GetBorrowedBooksQuery query)
         {
             return await Mediator.Send(query);
         }
@@ -42,6 +50,12 @@ namespace WebAPI.Controllers
         [HttpPost]
         [Route("BorrowBook")]
         public async Task<StandardResponse<string>> BorrowBook([FromBody] BorrowBookCommand command)
+        {
+            return await Mediator.Send(command);
+        }
+        [HttpPost]
+        [Route("ReturnBook")]
+        public async Task<StandardResponse<string>> ReturnBook([FromBody] ReturnBookCommand command)
         {
             return await Mediator.Send(command);
         }

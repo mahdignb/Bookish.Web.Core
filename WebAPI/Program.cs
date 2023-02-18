@@ -71,7 +71,6 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var maindbConnectionString = configuration.GetConnectionString("MainDB");
-Console.WriteLine(maindbConnectionString);
 builder.Services.AddDbContext<BookishDbContext>(options =>
 {
     options.UseMySql(maindbConnectionString, ServerVersion.AutoDetect(maindbConnectionString));
