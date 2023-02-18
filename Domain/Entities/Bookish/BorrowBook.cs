@@ -13,5 +13,6 @@ namespace Domain.Entities.Bookish
         public string BookId { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public bool IsReturned { get; set; }
     }
 }

@@ -52,7 +52,7 @@ namespace Core.User.Queries.GetUsers
                     UserType = user.UserType,
                     PhoneNumber = user.PhoneNumber,
                     NumberOfBorrowedBooks = await _bookishDb.BorrowBooks
-                    .CountAsync(c => c.UserId == user.Id, cancellationToken)
+                    .CountAsync(c => c.UserId == user.Id && c.IsReturned == false,cancellationToken)
                 });
             }
             return new StandardResponse<List<GetUsersDto>>
