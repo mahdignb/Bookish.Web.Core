@@ -7,6 +7,6 @@ and borrow a book from the library or give their book to the library.
 ## __Task list__
 - [x] Implement project architecture template
 - [x] Requirement for deploying the project on cloud
-- [ ] Design database model
-- [ ] User-related APIs
-- [ ] Book-related APIs
+- [x] Design database model
+- [x] User-related APIs
+- [x] Book-related APIs
